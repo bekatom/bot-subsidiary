@@ -6,8 +6,11 @@ var loadIntent = (intent, convo) => {
     require(`${convo.conf.STORY_DIR}/${intent}/blocks`).startConversation(convo)
 }
 
-var dontUnderstand = (convoBot, dontKnowMessage) => {
-    require('./helpers').randomResponseTextPromise(dontKnowMessage)
+var dontUnderstand = (convoBot, messageTexts) => {
+    if (messageTexts === null || typeof messageTexts === 'undefined') {
+       messageTexts = require(`${convoBot.conf.KEY_DIR}/index`).DONT_UNDERSTAND 
+    }
+    require('./helpers').randomResponseTextPromise(messageTexts)
     .then(text => {
         if (!convoBot.status) {
             convoBot.replyWithTyping(convoBot.message, text)
@@ -23,7 +26,7 @@ var dontUnderstand = (convoBot, dontKnowMessage) => {
 module.exports = {
     dontUnderstand,
     smallTalk: (convoBot) => {
-        var dontKnowMessages = require(`${convoBot.conf.KEY_DIR}/index`).DONT_UNDERSTAND
+       // var dontKnowMessages = require(`${convoBot.conf.KEY_DIR}/index`).DONT_UNDERSTAND
         // TODO check if convoBot.message contains existing properties
         let { entities, intent } = convoBot.message
         let intentValue = intent[0].value
@@ -38,7 +41,7 @@ module.exports = {
                 loadIntent(intentValue, convoBot)
             }).catch(() => {
                 convoBot.activate()
-                dontUnderstand(convoBot, dontKnowMessages)
+                dontUnderstand(convoBot, null)
             })
 
             return false
@@ -54,7 +57,7 @@ module.exports = {
 
         // if entities is empty and intent also empty
         if (_.isEmpty(entities) && intentValue === null) {
-            dontUnderstand(convoBot, dontKnowMessages)
+            dontUnderstand(convoBot, null)
             return false
         }
 
@@ -66,7 +69,7 @@ module.exports = {
                 convoBot.replyWithTyping(convoBot.message, writeResponseText)
             })
             .catch(() => {
-                dontUnderstand(convoBot, dontKnowMessages)
+                dontUnderstand(convoBot, null)
             })
             return false
         }
