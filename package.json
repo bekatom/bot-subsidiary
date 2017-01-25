@@ -1,6 +1,6 @@
 {
   "name": "bot-subsidiary",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "some helper functions for bot",
   "main": "index.js",
   "scripts": {
