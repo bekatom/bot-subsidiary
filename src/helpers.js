@@ -1,6 +1,6 @@
 var debug = require('debug')('bot')
 var async = require('async')
-var checkIntent = require('./changeStory').checkIntent
+var checkIntent = require('./changeStory')
 
 // TODO need to iterate over function list
 var buildBlockFlow = (start, validation, blockScope) => {
